@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <NuspecFile>SWebStamp.nuspec</NuspecFile>
+    <NuspecBasePath>..\..\release\win-unpacked</NuspecBasePath>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+  </PropertyGroup>
+</Project>

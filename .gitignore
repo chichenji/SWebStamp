@@ -1,0 +1,96 @@
+# 依赖目录
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 构建输出
+dist/
+build/
+
+# 环境变量
+.env
+.env.*
+!.env.example
+
+# 数据库
+*.sqlite
+*.db
+*.sqlite-*
+*.db-*
+
+# 上传文件
+uploads/*
+!uploads/.gitkeep
+
+# 日志
+logs/
+*.log
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.tmp
+*.temp
+.electron-builder-cache/
+.dotnet-home/
+.squirrel-home/
+scripts/**/bin/
+scripts/**/obj/
+
+# PM2
+.pm2/
+
+# Local runtimes, installers and historical distribution snapshots
+/release/
+/libreoffice/
+/WebPDF_Portable/
+*.zip
+*.rar
+*.7z
+*.exe
+*.msi
+*.nupkg
+*.blockmap
+
+# Local agent state and temporary task tracking
+/.ai_memory/
+/.agent/
+/.agents/
+/.codex/
+/* TO DO list.csv
+__pycache__/
+*.py[cod]
+
+# Local diagnostics and test assets (may contain account information)
+/upload_stamp.cjs
+/rect_stamp.png
+/test_stamp.png
+
+# Historical deployment documents and launchers; retained locally, not maintained
+/DEPLOYMENT.md
+/PRODUCTION_DEPLOYMENT.md
+/LOGIN_TROUBLESHOOTING.md
+/NETWORK_ERROR_FIX.md
+/SERVICE_STATUS.md
+/Dockerfile
+/docker-compose.yml
+/deploy.bat
+/deploy.ps1
+/deploy.sh
+/deploy_local.ps1
+/bundle_portable.ps1
+/installer.iss
+/一键部署.bat
+/启动WebPDF.bat
+/制作绿色版.bat
+/便携版使用说明.md

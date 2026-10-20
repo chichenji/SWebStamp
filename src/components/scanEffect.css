@@ -1,0 +1,32 @@
+.scan-intro { display: flex; align-items: center; gap: 12px; padding: 7px 0 16px; color: #7f332d; }
+.scan-intro strong { color: #343f42; font-size: 13px; font-weight: 600; }
+.scan-intro p, .scan-hint { margin: 5px 0 0; color: #78817f; font-size: 11px; line-height: 1.6; }
+.scan-enable { padding: 11px; border: 1px solid #d7ddda; background: #f0f4f1; border-radius: 6px; }
+.scan-check { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 12px; line-height: 1.5; color: #3d484a; }
+.scan-check input, .scan-slider input { accent-color: #9a4239; }
+.scan-scope { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.scan-scope select { flex: 1; min-width: 0; padding: 6px; border: 1px solid #d0d6d2; border-radius: 4px; background: white; }
+.scan-fieldset { margin: 16px 0 0; padding: 0; border: 0; min-width: 0; }
+.scan-fieldset:disabled { opacity: .45; }
+.scan-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.scan-presets button { padding: 9px 0; border: 1px solid #d5dad7; border-radius: 5px; background: #fff; color: #56615f; font-size: 12px; }
+.scan-presets .is-active { color: #8d3930; border-color: #b6746d; background: #fbf1ef; }
+.scan-section { padding-top: 13px; margin-bottom: 14px; border-top: 1px solid #e3e7e4; margin-top: 15px; }
+.scan-section h3, .scan-section summary { font-size: 11px; color: #65706c; font-weight: 600; margin: 0 0 12px; }
+.scan-section summary { cursor: pointer; }
+.scan-slider { display: block; margin-top: 10px; }
+.scan-slider span { display: flex; align-items: center; justify-content: space-between; color: #4d5856; font-size: 12px; }
+.scan-slider output { font-variant-numeric: tabular-nums; color: #8b5149; }
+.scan-slider input { width: 100%; height: 15px; cursor: pointer; margin-top: 5px; }
+.scan-preview-canvas { display: block; width: 100%; height: auto; }
+.scan-interaction-layer { position: absolute; transform-origin: center; pointer-events: none; }
+.scan-interaction-layer .stamp-overlay { pointer-events: auto; }
+.scan-interaction-layer .stamp-overlay > img { visibility: hidden; }
+.document-interaction-layer { position: absolute; inset: 0; pointer-events: none; }
+.document-interaction-layer .stamp-overlay { pointer-events: auto; }
+.scan-render-status { position: absolute; top: 10px; left: 10px; z-index: 40; padding: 6px 10px; background: #fffef4ed; border: 1px solid #dfd8b9; border-radius: 5px; font-size: 12px; pointer-events: none; }
+.scan-render-error { color: #a12c24; background: #fff1ef; }
+.scan-error-placeholder { min-height: 240px; background: #f7f5f2; }
+.scan-export-progress { padding: 10px 15px; font-size: 12px; background: #f0f4f1; }
+.scan-export-progress progress { width: 100%; display: block; margin-top: 7px; accent-color: #98473e; }
+.scan-export-error { padding: 10px 15px; color: #a12c24; font-size: 12px; background: #fff1ef; }

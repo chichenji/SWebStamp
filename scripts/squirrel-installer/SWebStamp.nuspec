@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SWebStamp</id>
+    <title>SWebStamp</title>
+    <version>$version$</version>
+    <authors>SWebStamp</authors>
+    <owners>SWebStamp</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SWebStamp Document Tool</description>
+    <copyright>Copyright 2026 SWebStamp</copyright>
+  </metadata>
+  <files>
+    <file src="locales\**" target="lib\net45\locales" />
+    <file src="resources\**" target="lib\net45\resources" />
+    <file src="*.bin" target="lib\net45" />
+    <file src="*.dll" target="lib\net45" />
+    <file src="*.exe.config" target="lib\net45" />
+    <file src="*.exe.sig" target="lib\net45" />
+    <file src="*.html" target="lib\net45" />
+    <file src="*.pak" target="lib\net45" />
+    <file src="*.dat" target="lib\net45" />
+    <file src="*.json" target="lib\net45" />
+    <file src="version" target="lib\net45\version" />
+    <file src="Squirrel.exe" target="lib\net45\Squirrel.exe" />
+    <file src="LICENSE" target="lib\net45\LICENSE" />
+    <file src="SWebStamp.exe" target="lib\net45\SWebStamp.exe" />
+  </files>
+</package>
