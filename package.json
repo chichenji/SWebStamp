@@ -2,6 +2,7 @@
   "name": "webpdf",
   "private": true,
   "version": "1.4.1",
+  "license": "MIT",
   "main": "electron/main.js",
   "description": "WebPDF Document Tool",
   "author": "User",
