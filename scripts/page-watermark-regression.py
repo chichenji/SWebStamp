@@ -64,21 +64,29 @@ def verify_overlay(page, config, source_url):
     }''', {'config': config, 'sourceUrl': source_url})
 
 
+def angle_slider(page, layout='single'):
+    name = '整行倾斜角度' if layout == 'array' else '倾斜角度'
+    return page.get_by_role('slider', name=name, exact=True)
+
+
 def check_watermark_ui(page, source_url):
     page.get_by_role('button', name='水印', exact=True).click()
     page.get_by_role('button', name='单行水印', exact=True).click()
     page.get_by_label('水印文字', exact=True).fill('单行测试 SINGLE')
-    page.get_by_role('slider', name='倾斜角度', exact=True).fill('0')
+    angle_slider(page, 'single').fill('0')
     page.get_by_role('slider', name='水平位置', exact=True).fill('25')
     page.get_by_role('slider', name='垂直位置', exact=True).fill('75')
+    page.get_by_role('button', name='应用水印', exact=True).click()
     config = {'layout': 'single', 'text': '单行测试 SINGLE', 'angle': 0, 'positionX': 25, 'positionY': 75}
     single = verify_overlay(page, config, source_url)
     page.get_by_role('button', name='阵列水印', exact=True).click()
     expect(page.get_by_role('slider', name='阵列间距', exact=True)).to_have_count(1)
+    expect(angle_slider(page, 'array')).to_have_count(1)
     array = verify_overlay(page, {**config, 'layout': 'array'}, source_url)
     assert array != single
     page.get_by_role('button', name='单行水印', exact=True).click()
     expect(page.get_by_role('slider', name='水平位置', exact=True)).to_have_value('25')
+    expect(angle_slider(page, 'single')).to_have_count(1)
     assert verify_overlay(page, config, source_url) == single
     page.screenshot(path=str(ARTIFACTS / 'single-watermark.png'))
     page.get_by_role('button', name='移除水印', exact=True).click()

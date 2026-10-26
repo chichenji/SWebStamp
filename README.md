@@ -2,13 +2,15 @@
 
 本地文档盖章工作台，支持 PDF、图片和 Office 文档导入，拖放印章、骑缝章、水印、扫描件效果，以及 PDF / 图片导出。
 
-当前版本：**1.4.1**。桌面安装器面向 Windows x64，使用 Electron 40 和 Squirrel。
+当前版本：**1.4.3**。桌面安装器面向 Windows x64，使用 Electron 40 和 Squirrel。
+
+1.4.3 包含印章与水印的全局参数记忆，以及整行水印旋转、自适应水印间距、页面图片调整和 MIT 开源信息。
 
 ## 下载与升级
 
-从 [v1.4.1 Release](https://github.com/chichenji/SWebStamp/releases/tag/v1.4.1) 下载 `SWebStamp Setup 1.4.1.exe`。
+下载 [v1.4.3 安装包](https://github.com/chichenji/SWebStamp/releases/tag/v1.4.3)，详见 [1.4.3 升级说明](docs/releases/1.4.3.md)。本地构建输出为 `release/SWebStamp Setup 1.4.3.exe`。
 
-安装前先导出当前文档并关闭旧版，在同一 Windows 用户账号下运行安装包。Squirrel 版 1.3.0 / 1.3.1 / 1.4.0 可覆盖升级，无需先卸载。当前不提供联网自动更新。
+安装前先导出当前文档并关闭旧版，在同一 Windows 用户账号下运行安装包。Squirrel 版 1.3.0 / 1.3.1 / 1.4.0 / 1.4.1 / 1.4.2 可覆盖升级，无需先卸载。当前不提供联网自动更新。
 
 安装包未数字签名，Windows 可能显示未知发布者提示。旧 NSIS、Inno Setup、绿色版与 Squirrel 的跨安装器迁移未验证。
 
@@ -17,7 +19,12 @@
 - 导入 PDF 和图片；通过本机 LibreOffice 将 Word、Excel、PowerPoint 转换为 PDF。
 - 点击左侧缩略图切页，拖动、键盘或按钮调整页面顺序。
 - 从印章库拖放盖章，移动、缩放、旋转，并调整透明度、亮度、对比度、饱和度及正片叠底。
+- 全局印章样式记忆：调整任一印章大小、角度或外观后自动记忆为全局默认样式，不同文件盖章或换用不同印章素材均自动继承相同比例与质感，不自动摆放历史印章。
 - 多页骑缝章；文字 / 图片水印支持单行（每页一处）和阵列布局。
+- 阵列水印整体按行旋转，长文字及大字号按实际字形测量，后续水印随内容宽度向右排列。
+- 水印配置全局持久化：完整保存水印类型、内容、图片、角度、透明度与排布；支持“移除水印”保留参数、“应用水印”重新启用与“恢复默认”；重启自动延续启用状态。
+- 本地存储韧性与隐私安全：参数纯本地储存（localStorage），不上传任何私有文件或素材；存储写入失败或数据损坏时提供明确提示、重试与重置入口。
+- 页面图片可调亮度、对比度、饱和度、去色、反相和复古色调，支持单页 / 全部已导入页及原图对比。
 - 真实影印、清晰黑白、彩色扫描，支持纸纹、底灰、颗粒、阴影、A4 适配及印章保色。
 - 导出多页 PDF 或逐页图片，支持质量选择、编辑权限密码和本地导出记录。
 
@@ -50,11 +57,12 @@ npm start
 
 ```powershell
 node node_modules/eslint/bin/eslint.js src scripts/watermark-browser-checks.js
-node --test --test-timeout=60000 electron/squirrel.test.js server/utils/libreOfficeProcess.test.js server/utils/officeUploadPolicy.test.js src/utils/stampAppearance.test.js src/utils/stampPlacement.test.js src/utils/stampRenderer.test.js src/utils/scanEffect.test.js src/utils/watermarkRenderer.test.js
+$testFiles = @(rg --files src server electron -g '*.test.js')
+node --test --test-timeout=60000 @testFiles
 node node_modules/vite/bin/vite.js build
 ```
 
-当前已验证 38 项自动化测试，命令显式列出测试文件以兼容 Windows Shell。
+命令在 PowerShell 中枚举源码测试，覆盖安装、Office 转换、印章、扫描、水印排布、页面图片调整及参数持久化。
 
 Windows 安装器构建还需 .NET SDK 8 和本地 Electron 依赖：
 
@@ -85,6 +93,8 @@ SECURITY.md                  隐私、安全边界及已知限制
 - [构建与发布](docs/BUILDING.md)
 - [版本记录](docs/CHANGELOG.md)
 - [1.4.1 升级说明](docs/releases/1.4.1.md)
+- [1.4.2 升级说明](docs/releases/1.4.2.md)
+- [1.4.3 升级说明](docs/releases/1.4.3.md)
 - [安全说明](SECURITY.md)
 
 ## 开源授权

@@ -29,13 +29,19 @@ const getMoveUpdates = (interaction, delta) => {
     };
 };
 
-const getResizeUpdates = (interaction, pointerDelta) => {
+export const getResizeUpdates = (interaction, pointerDelta) => {
     const { stamp } = interaction;
     const delta = pointerDelta.x;
+    const requestedWidth = clamp(stamp.widthPercent + delta, MIN_STAMP_SIZE, MAX_STAMP_SIZE);
     const ratio = stamp.heightPercent / stamp.widthPercent;
     const maxWidth = Math.min(MAX_STAMP_SIZE, 1 - stamp.xPercent, (1 - stamp.yPercent) / ratio);
-    const widthPercent = clamp(stamp.widthPercent + delta, MIN_STAMP_SIZE, maxWidth);
-    return { widthPercent, heightPercent: widthPercent * ratio };
+    const minWidth = Math.min(MIN_STAMP_SIZE, maxWidth);
+    const widthPercent = clamp(stamp.widthPercent + delta, minWidth, maxWidth);
+    return {
+        widthPercent: Number(widthPercent.toFixed(6)),
+        heightPercent: Number((widthPercent * ratio).toFixed(6)),
+        requestedWidthPercent: Number(requestedWidth.toFixed(6))
+    };
 };
 
 const getRotationUpdate = (event, interaction) => ({

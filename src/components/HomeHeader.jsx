@@ -1,7 +1,7 @@
 import React from 'react';
-import { Download, RotateCcw, ScanLine, ShieldCheck, Stamp } from 'lucide-react';
+import { Download, RotateCcw, ScanLine, ShieldCheck, SlidersHorizontal, Stamp } from 'lucide-react';
 
-const HomeHeader = ({ pageCount, onScan, onVerify, onExport }) => (
+const HomeHeader = ({ pageCount, onAdjustImage, onScan, onVerify, onExport }) => (
     <header className="app-header">
         <div className="brand-lockup">
             <div className="brand-mark"><Stamp size={21} /></div>
@@ -9,6 +9,14 @@ const HomeHeader = ({ pageCount, onScan, onVerify, onExport }) => (
         </div>
         <div className="header-status"><span>{pageCount} 页</span></div>
         <div className="header-actions">
+            <button
+                type="button"
+                className="command-button"
+                disabled={!pageCount}
+                onClick={onAdjustImage}
+            >
+                <SlidersHorizontal size={16} /> 页面图片调整
+            </button>
             <button type="button" className="command-button" onClick={onScan}><ScanLine size={16} /> 扫描效果</button>
             <button type="button" className="command-button" onClick={() => window.location.reload()}><RotateCcw size={16} /> 重置</button>
             <button type="button" className="command-button" onClick={onVerify}><ShieldCheck size={16} /> 验证</button>

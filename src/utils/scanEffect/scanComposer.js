@@ -4,10 +4,11 @@ import { createSeedFromId } from './scanNoise.js';
 import { processCanvasStage } from './scanWorkerClient.js';
 import { normalizeScanConfig } from './scanConstants.js';
 import { drawPageWatermark } from '../watermarkRenderer.js';
+import { drawBaseImageOnCanvas } from '../imageAdjustment.js';
 
 const DEG_TO_RAD = Math.PI / 180;
 
-const createPageCanvas = (baseImage, preset, opaque) => {
+export const createPageCanvas = (baseImage, preset = { scaleFactor: 1 }, { opaque = false, imageAdjustments = null } = {}) => {
     const canvas = document.createElement('canvas');
     canvas.width = Math.round(baseImage.width * preset.scaleFactor);
     canvas.height = Math.round(baseImage.height * preset.scaleFactor);
@@ -16,7 +17,13 @@ const createPageCanvas = (baseImage, preset, opaque) => {
         context.fillStyle = '#ffffff';
         context.fillRect(0, 0, canvas.width, canvas.height);
     }
-    context.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+    drawBaseImageOnCanvas({
+        context,
+        image: baseImage,
+        width: canvas.width,
+        height: canvas.height,
+        imageAdjustments
+    });
     return canvas;
 };
 
@@ -93,39 +100,49 @@ const applyTransformedGeometry = (sourceCanvas, scanConfig) => {
     return targetCanvas;
 };
 
-export const composeScanPageCanvas = async ({
-    pageDoc,
-    stamps = [],
-    index = 0,
-    pageCount = 1,
-    preset = { scaleFactor: 1 },
-    assets = {},
-    crossPageStamp = null,
-    scanConfig = null,
-    signal
-}) => {
-    const baseImage = await getCachedImage(pageDoc.previewUrl, assets.imageCache);
-    const config = normalizeScanConfig(scanConfig ?? {});
-    const canvas = createPageCanvas(baseImage, preset, config.enabled);
-    const context = canvas.getContext('2d');
-
-    const isScanEnabled = config.enabled;
-    const seed = isScanEnabled ? createSeedFromId(pageDoc.id) : 0;
-
-    signal?.throwIfAborted();
-    drawWatermark({ context, canvas, asset: assets.watermark, scaleFactor: preset.scaleFactor });
-
-    if (isScanEnabled && config.preserveStampColors) {
+const applyScanPipeline = async ({ canvas, config, seed, signal }) => {
+    if (!config.preserveStampColors) {
         await processCanvasStage({ canvas, config, seed, stage: 'tone', signal });
     }
-
-    await drawPlacedStamps({ context, canvas, stamps, imageCache: assets.imageCache });
-    await drawCrossPageStamp({ context, canvas, index, pageCount, assets, crossPageStamp });
-
-    if (!isScanEnabled) return canvas;
-
-    if (!config.preserveStampColors) await processCanvasStage({ canvas, config, seed, stage: 'tone', signal });
     const target = applyTransformedGeometry(canvas, config);
     await processCanvasStage({ canvas: target, config, seed, stage: 'optics', signal });
     return target;
+};
+
+const drawPageDecorations = async ({ context, canvas, options, assets }) => {
+    await drawPlacedStamps({ context, canvas, stamps: options.stamps, imageCache: assets.imageCache });
+    await drawCrossPageStamp({
+        context,
+        canvas,
+        index: options.index ?? 0,
+        pageCount: options.pageCount ?? 1,
+        assets,
+        crossPageStamp: options.crossPageStamp
+    });
+};
+
+export const composeScanPageCanvas = async (options) => {
+    const { pageDoc, signal } = options;
+    const preset = options.preset ?? { scaleFactor: 1 };
+    const assets = options.assets ?? {};
+    const baseImage = await getCachedImage(pageDoc.previewUrl, assets.imageCache);
+    const config = normalizeScanConfig(options.scanConfig ?? {});
+    const canvas = createPageCanvas(baseImage, preset, {
+        opaque: config.enabled,
+        imageAdjustments: pageDoc.imageAdjustments
+    });
+    const context = canvas.getContext('2d');
+    const seed = config.enabled ? createSeedFromId(pageDoc.id) : 0;
+
+    if (signal) signal.throwIfAborted();
+    drawWatermark({ context, canvas, asset: assets.watermark, scaleFactor: preset.scaleFactor });
+
+    if (config.enabled && config.preserveStampColors) {
+        await processCanvasStage({ canvas, config, seed, stage: 'tone', signal });
+    }
+
+    await drawPageDecorations({ context, canvas, options, assets });
+
+    if (!config.enabled) return canvas;
+    return applyScanPipeline({ canvas, config, seed, signal });
 };

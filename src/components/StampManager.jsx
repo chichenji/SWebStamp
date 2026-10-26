@@ -5,6 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Scissors, SlidersHorizontal, Stamp, Trash2, Type, Upload } from 'lucide-react';
 import { useApp } from '../context/useApp';
 import StampInspector from './StampInspector';
+import OpenSourceNotice from './OpenSourceNotice';
 
 const StampLibraryItem = ({ stamp, onDelete }) => {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -128,6 +129,7 @@ const StampManager = ({ onOpenCrossPageTool, onOpenWatermarkTool }) => {
                     />
                 ) : <StampInspector />}
             </div>
+            <OpenSourceNotice />
         </div>
     );
 };

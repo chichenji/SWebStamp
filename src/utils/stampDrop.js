@@ -2,7 +2,7 @@ import { getStampDimensions } from './pdfDocument.js';
 import { calculateStampPlacement } from './stampPlacement.js';
 import { mapPointerToSource } from './scanEffect/scanGeometry.js';
 
-export const getDroppedStampPlacement = async event => {
+export const getDroppedStampPlacement = async (event, widthPercent) => {
     const { stamp } = event.active.data.current;
     const { geometry } = event.over.data.current;
     const dimensions = await getStampDimensions(stamp.url);
@@ -16,5 +16,11 @@ export const getDroppedStampPlacement = async event => {
         pageRect = { left: 0, top: 0, width: geometry.sourceWidth, height: geometry.sourceHeight };
         point = { x: sourcePoint.xPercent * pageRect.width, y: sourcePoint.yPercent * pageRect.height };
     }
-    return calculateStampPlacement({ clientX: point.x, clientY: point.y, pageRect, aspectRatio: dimensions.aspectRatio });
+    return calculateStampPlacement({
+        clientX: point.x,
+        clientY: point.y,
+        pageRect,
+        aspectRatio: dimensions.aspectRatio,
+        widthPercent
+    });
 };

@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { DEFAULT_WATERMARK } from '../utils/watermarkConfig.js';
+import { useWatermarkPreferences } from './useWatermarkPreferences.js';
 
-export const useDocumentLayers = () => {
+export const useDocumentLayers = (storage) => {
     const [crossPageStamp, setCrossPageStamp] = useState(null);
     const [crossPagePreview, setCrossPagePreview] = useState(null);
-    const [watermarkConfig, setWatermarkConfig] = useState(null);
-    const updateWatermarkConfig = updates => setWatermarkConfig(previous => ({ ...DEFAULT_WATERMARK, ...previous, ...updates }));
-    const applyCrossPageStamp = config => setCrossPageStamp({ id: `cross-${Date.now()}`, ...config });
-    const updateCrossPageStamp = updates => setCrossPageStamp(previous => previous ? { ...previous, ...updates } : null);
-    return { crossPageStamp, crossPagePreview, setCrossPagePreview, watermarkConfig,
-        updateWatermarkConfig, clearWatermarkConfig: () => setWatermarkConfig(null), applyCrossPageStamp,
-        updateCrossPageStamp, clearCrossPageStamp: () => setCrossPageStamp(null) };
+    const watermark = useWatermarkPreferences(storage);
+
+    return {
+        crossPageStamp,
+        crossPagePreview,
+        setCrossPagePreview,
+        ...watermark,
+        applyCrossPageStamp: (config) => setCrossPageStamp({ id: `cross-${Date.now()}`, ...config }),
+        updateCrossPageStamp: (updates) => setCrossPageStamp(prev => prev ? { ...prev, ...updates } : null),
+        clearCrossPageStamp: () => setCrossPageStamp(null)
+    };
 };

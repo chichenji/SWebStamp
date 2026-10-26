@@ -11,12 +11,30 @@ const POSITION_FIELDS = [
 const SPACING_FIELD = { key: 'density', label: '阵列间距', min: 0.5, max: 3, step: 0.1 };
 const FONT_FIELD = { key: 'fontSize', label: '字号', min: 12, max: 120, step: 2 };
 
-const WatermarkSlider = ({ field, config, onChange }) => (
-    <label className="scan-slider"><span>{field.label}<output>{field.format ? field.format(config[field.key]) : config[field.key]}</output></span>
-        <input aria-label={field.label} type="range" min={field.min} max={field.max} step={field.step ?? 1}
-            value={config[field.key]} onChange={event => onChange({ [field.key]: Number(event.target.value) })} />
-    </label>
-);
+const getFieldLabel = (field, layout) => {
+    if (field.key === 'angle' && layout === 'array') {
+        return '整行倾斜角度';
+    }
+    return field.label;
+};
+
+const WatermarkSlider = ({ field, config, onChange }) => {
+    const label = getFieldLabel(field, config.layout);
+    return (
+        <label className="scan-slider">
+            <span>{label}<output>{field.format ? field.format(config[field.key]) : config[field.key]}</output></span>
+            <input
+                aria-label={label}
+                type="range"
+                min={field.min}
+                max={field.max}
+                step={field.step ?? 1}
+                value={config[field.key]}
+                onChange={event => onChange({ [field.key]: Number(event.target.value) })}
+            />
+        </label>
+    );
+};
 
 const ImageWatermarkInput = ({ config, onChange }) => {
     const input = useRef(null);
@@ -29,13 +47,18 @@ const ImageWatermarkInput = ({ config, onChange }) => {
         reader.readAsDataURL(file);
         event.target.value = '';
     };
-    return <div className="space-y-3">
-        <button type="button" onClick={() => input.current.click()}
-            className="w-full border-2 border-dashed border-gray-300 rounded-xl p-4 text-sm text-gray-500 hover:border-blue-500">
-            {config.imageUrl ? <img src={config.imageUrl} alt="水印图片预览" className="max-h-24 mx-auto object-contain" /> : '点击选择水印图片'}
-        </button>
-        <input aria-label="上传水印图片" type="file" accept="image/*" ref={input} className="hidden" onChange={upload} />
-    </div>;
+    return (
+        <div className="space-y-3">
+            <button
+                type="button"
+                onClick={() => input.current.click()}
+                className="w-full border-2 border-dashed border-gray-300 rounded-xl p-4 text-sm text-gray-500 hover:border-blue-500"
+            >
+                {config.imageUrl ? <img src={config.imageUrl} alt="水印图片预览" className="max-h-24 mx-auto object-contain" /> : '点击选择水印图片'}
+            </button>
+            <input aria-label="上传水印图片" type="file" accept="image/*" ref={input} className="hidden" onChange={upload} />
+        </div>
+    );
 };
 
 const WatermarkContent = ({ config, onChange }) => (
@@ -67,12 +90,20 @@ const WatermarkControls = ({ config, onChange }) => (
                 <button type="button" aria-pressed={config.layout === 'array'} className={config.layout === 'array' ? 'is-active' : ''}
                     onClick={() => onChange({ layout: 'array' })}>阵列水印</button>
             </div>
-            <p className="scan-hint">{config.layout === 'single' ? '每页只显示一处文字或图片，可调整位置。' : '在每页重复平铺水印，可调整间距。'}</p>
+            <p className="scan-hint">
+                {config.layout === 'single'
+                    ? '每页只显示一处文字或图片，可调整位置与倾斜角度。'
+                    : '在每页按整行平铺水印，调节角度可旋转整行方向，向右延展排列。'}
+            </p>
         </section>
         <WatermarkContent config={config} onChange={onChange} />
-        <section className="scan-section"><h3>外观</h3>{APPEARANCE_FIELDS.map(field =>
-            <WatermarkSlider key={field.key} field={field} config={config} onChange={onChange} />)}</section>
-        <section className="scan-section"><h3>{config.layout === 'single' ? '水印位置' : '平铺设置'}</h3>
+        <section className="scan-section">
+            <h3>外观</h3>
+            {APPEARANCE_FIELDS.map(field =>
+                <WatermarkSlider key={field.key} field={field} config={config} onChange={onChange} />)}
+        </section>
+        <section className="scan-section">
+            <h3>{config.layout === 'single' ? '水印位置' : '平铺设置'}</h3>
             {(config.layout === 'single' ? POSITION_FIELDS : [SPACING_FIELD]).map(field =>
                 <WatermarkSlider key={field.key} field={field} config={config} onChange={onChange} />)}
         </section>

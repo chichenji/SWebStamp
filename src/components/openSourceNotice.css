@@ -1,0 +1,105 @@
+.open-source-notice {
+    flex: 0 0 auto;
+    border-top: 1px solid var(--line);
+    background: #fbfcfb;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.open-source-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+    color: #465156;
+    outline: none;
+}
+
+.open-source-summary:hover {
+    background: #f2f5f3;
+}
+
+.open-source-summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+}
+
+.open-source-summary-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.open-source-badge {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    background: #eef2f0;
+    color: #485459;
+    border: 1px solid var(--line);
+}
+
+.open-source-body {
+    padding: 8px 12px 10px;
+    border-top: 1px solid #edf0ee;
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.open-source-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.open-source-meta-label {
+    font-size: 10px;
+    font-weight: 650;
+    color: #6d787d;
+}
+
+.open-source-url-text,
+.open-source-copyright {
+    font-family: Consolas, "Cascadia Code", monospace;
+    font-size: 11px;
+    color: #263034;
+    user-select: text;
+    word-break: break-all;
+}
+
+.open-source-clause {
+    margin: 2px 0 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #556065;
+}
+
+.open-source-license-wrap {
+    margin-top: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.open-source-license-pre {
+    margin: 0;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: #f2f4f3;
+    border: 1px solid #e0e5e2;
+    font-family: Consolas, "Cascadia Code", monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    color: #3b4549;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 110px;
+    overflow-y: auto;
+    user-select: text;
+}

@@ -22,12 +22,13 @@ npm run dev:all
 在仓库根目录运行：
 
 ```powershell
-node --test --test-timeout=60000 electron/squirrel.test.js server/utils/libreOfficeProcess.test.js server/utils/officeUploadPolicy.test.js src/utils/stampAppearance.test.js src/utils/stampPlacement.test.js src/utils/stampRenderer.test.js src/utils/scanEffect.test.js src/utils/watermarkRenderer.test.js
+$testFiles = @(rg --files src server electron -g '*.test.js')
+node --test --test-timeout=60000 @testFiles
 node node_modules/eslint/bin/eslint.js src scripts/watermark-browser-checks.js
 node node_modules/vite/bin/vite.js build
 ```
 
-当前这组测试为 38 项，覆盖安装事件、Office 隔离配置和上传策略、印章坐标与绘制、扫描像素 / 几何和水印布局。它不等同于所有浏览器功能或真实安装升级的端到端测试。
+这组测试覆盖安装事件、Office 隔离配置和上传策略、印章坐标与绘制、扫描像素 / 几何、水印整行布局、页面图片调整与参数持久化。它不等同于所有浏览器功能或真实安装升级的端到端测试。
 
 浏览器测试使用实际导入、切页、指针 / 键盘排序、水印设置和 PNG / PDF 下载；输出样本写到被忽略的 `uploads/watermark-check/`：
 
@@ -73,9 +74,9 @@ npm run dist
 输出示例：
 
 ```text
-release/SWebStamp Setup 1.4.1.exe
-release/SWebStamp-1.4.1-full.nupkg
-release/SWebStamp-1.4.1-RELEASES
+release/SWebStamp Setup 1.4.3.exe
+release/SWebStamp-1.4.3-full.nupkg
+release/SWebStamp-1.4.3-RELEASES
 ```
 
 构建会重建 `release/win-unpacked/`、`release/squirrel-package/` 和 `release/squirrel-installer/` 工作目录，不能在其中存放用户文件。发布根目录中不同版本的独立安装器和完整包应保留。
@@ -85,14 +86,14 @@ release/SWebStamp-1.4.1-RELEASES
 ## 安装包校验
 
 ```powershell
-./scripts/verify-electron-installer.ps1 -PreviousVersions @('1.3.0', '1.3.1', '1.4.0')
+./scripts/verify-electron-installer.ps1 -PreviousVersions @('1.3.0', '1.3.1', '1.4.0', '1.4.1', '1.4.2')
 ```
 
-此脚本要求本地 `release/` 中存在所列旧版本的完整包和 RELEASES。全新克隆不包含历史二进制，应先从可信历史存档准备对应文件。若只检查新包本体，可显式传入 `-PreviousVersions @()`；这不能替代升级兼容性检查。
+此脚本使用 PowerShell 7（需要 `.NET` 的 `Path.GetRelativePath`），要求本地 `release/` 中存在所列旧版本的完整包和 RELEASES。全新克隆不包含历史二进制，应先从可信历史存档准备对应文件。若只检查新包本体，可显式传入 `-PreviousVersions @()`；这不能替代升级兼容性检查。
 
 脚本校验包版本、文件哈希、前端资源与关键运行代码，并调用原生 Squirrel 升级计算。它不会执行安装，也不代表已在用户机器上完成过覆盖升级。
 
-还应检查 Setup 内嵌包与外部完整包一致、压缩数据 CRC、签名状态和安装器 SHA-256。当前 1.4.1 安装器未数字签名。
+还应检查 Setup 内嵌包与外部完整包一致、压缩数据 CRC、签名状态和安装器 SHA-256。当前安装器未数字签名。
 
 ## GitHub 发布
 
